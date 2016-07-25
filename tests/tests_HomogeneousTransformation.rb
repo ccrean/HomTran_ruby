@@ -109,4 +109,15 @@ class TestHomogeneousTransformation < Test::Unit::TestCase
     assert_in_delta( (fr.transform(Vector[0, 0, 2]) -
                       (t + Vector[0, -2, 0])).norm(), 0, 1e-15)
   end
+
+  def test_inverse
+    vectors = [ Vector[1,2,3], Vector[0,0,1], Vector[0.1,0.1,0.1] ]
+    @quats.product(@translations).each() do |q, t|
+      fr = HomTran.new(q, t)
+      vectors.each() do |v|
+        transformed = fr.inverse().transform(fr.transform(v))
+        assert_in_delta( (v - transformed).norm(), 0, 1e-14)
+      end
+    end
+  end
 end

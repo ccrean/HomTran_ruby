@@ -73,6 +73,13 @@ class HomogeneousTransformation
   def transform(v)
     return @t + @q.transform(v)
   end
+
+  # Returns the inverse of the homogeneous transformation.
+  def inverse
+    q_inv = @q.inverse()
+    t_inv = q_inv.transform(-1 * @t)
+    return HomogeneousTransformation.new(q_inv, t_inv)
+  end
 end
 
 HomTran = HomogeneousTransformation

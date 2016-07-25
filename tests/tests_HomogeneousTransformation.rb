@@ -19,7 +19,7 @@ class TestHomogeneousTransformation < Test::Unit::TestCase
       @quats << UnitQuaternion.fromAngleAxis(angle, axis)
     end
 
-    positions = (0..0.1).step(0.1).to_a + (1..10).step(1).to_a
+    positions = (0..1).step(0.1).to_a
     @translations = []
     positions.product(positions, positions).each() do |a, b, c|
       @translations << Vector[a, b, c]
@@ -36,6 +36,17 @@ class TestHomogeneousTransformation < Test::Unit::TestCase
     ht = HomTran.new(q, t)
     assert_equal(ht.getQuaternion(), q)
     assert_equal(ht.getTranslation(), t)
+    
+    @quats.product(@translations).each() do |q2, t2|
+      fr = HomTran.new(q2, t2, ht)
+      assert_in_delta( (fr.getQuaternion() - q * q2).norm(), 0, 1e-15)
+      assert_in_delta( (fr.getTranslation() - (t + q.transform(t2))).norm(),
+                       0, 1e-15)
+
+      fr = HomTran.new(q2, t2, ht, false)
+      assert_in_delta( (fr.getQuaternion() - q2 * q).norm(), 0, 1e-15)
+      assert_in_delta( (fr.getTranslation() - (t + t2)).norm(), 0, 1e-15)
+    end
   end
 
   def test_setQuaternion
@@ -48,10 +59,10 @@ class TestHomogeneousTransformation < Test::Unit::TestCase
       fr1 = HomTran.new(q1)
       fr2 = HomTran.new()
       fr2.setQuaternion(q2, fr1)
-      assert_in_delta( (fr2.getQuaternion() - q1 * q2).norm(), 1e-15 )
+      assert_in_delta( (fr2.getQuaternion() - q1 * q2).norm(), 0, 1e-15 )
       
       fr2.setQuaternion(q2, fr1, false)
-      assert_in_delta( (fr2.getQuaternion() - q2 * q1).norm(), 1e-15 )
+      assert_in_delta( (fr2.getQuaternion() - q2 * q1).norm(), 0, 1e-15 )
     end
   end
 
@@ -59,16 +70,16 @@ class TestHomogeneousTransformation < Test::Unit::TestCase
     @quats.product(@translations).each() do |q, t|
       fr1 = HomTran.new(q)
       fr1.setTranslation(t)
-      assert_in_delta( (fr1.getTranslation() - t).norm(), 1e-15 )
+      assert_in_delta( (fr1.getTranslation() - t).norm(), 0, 1e-15 )
 
       fr2 = HomTran.new()
       fr2.setTranslation(t, fr1)
       assert_in_delta( (fr1.getTranslation() +
                         fr1.getQuaternion().transform(t) - 
-                        fr2.getTranslation()).norm(), 1e-15 )
+                        fr2.getTranslation()).norm(), 0, 1e-15 )
 
       fr2.setTranslation(t, fr1, false)
-      assert_in_delta( (fr2.getTranslation - 2 * t).norm(), 1e-15)
+      assert_in_delta( (fr2.getTranslation - 2 * t).norm(), 0, 1e-15)
     end
   end
 end

@@ -3,10 +3,18 @@ require 'unit_quaternion'
 require 'matrix'
 
 class HomogeneousTransformation
+  # Creates a new HomogeneousTransformation from a quaternion and a vector.
+  #
+  # Params:
+  # +q+:: A UnitQuaternion object representing this frame's orientation relative to the rel_to frame.
+  # +translation+:: A 3-vector representing this frame's translation relative to the rel_to frame.
+  # +rel_to+:: A HomogeneousTransformation object relative to which the current frame's orientation and translation are specified.  If rel_to is nil, the orientation and translation will be specified relative to the global reference frame.
+  # +local+:: A boolean value.  If local is false, the relative position and orientation will be measured in the global reference frame.  If local is true, the relative position and orientation will be meausured in rel_to's reference frame.
   def initialize(q = UnitQuaternion.new(1, 0, 0, 0),
-                 translation = Vector[0, 0, 0])
-    @q = q
-    @t = translation
+                 translation = Vector[0, 0, 0],
+                 rel_to = nil, local = true)
+    setQuaternion(q, rel_to, local)
+    setTranslation(translation, rel_to, local)
   end
 
   def getQuaternion()

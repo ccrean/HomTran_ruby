@@ -61,6 +61,18 @@ class HomogeneousTransformation
       @t = t
     end
   end
+
+  # Takes a vector v representing a point in the local frame and returns the
+  # vector to that same point relative to the global frame.
+  #
+  # Params:
+  # +v+:: A vector in the local reference frame.
+  #
+  # Returns:
+  # The representation of v in the global reference frame.
+  def transform(v)
+    return @t + @q.transform(v)
+  end
 end
 
 HomTran = HomogeneousTransformation

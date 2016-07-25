@@ -19,7 +19,7 @@ class TestHomogeneousTransformation < Test::Unit::TestCase
       @quats << UnitQuaternion.fromAngleAxis(angle, axis)
     end
 
-    positions = (0..1).step(0.1).to_a
+    positions = (0..1).step(0.2).to_a
     @translations = []
     positions.product(positions, positions).each() do |a, b, c|
       @translations << Vector[a, b, c]
@@ -81,5 +81,32 @@ class TestHomogeneousTransformation < Test::Unit::TestCase
       fr2.setTranslation(t, fr1, false)
       assert_in_delta( (fr2.getTranslation - 2 * t).norm(), 0, 1e-15)
     end
+  end
+
+  def test_transform
+    t = Vector[1,2,3]
+    fr = HomTran.new(UnitQuaternion.fromAngleAxis(Math::PI/2,
+                                                  Vector[0, 0, 1]), t)
+    assert_in_delta( (fr.transform(Vector[2, 0, 0]) -
+                      (t + Vector[0, 2, 0])).norm(), 0, 1e-15)
+    assert_in_delta( (fr.transform(Vector[0, 2, 0]) -
+                      (t + Vector[-2, 0, 0])).norm(), 0, 1e-15)
+
+    fr = HomTran.new(UnitQuaternion.fromAngleAxis(Math::PI/2,
+                                                  Vector[0, 1, 0]), t)
+    assert_in_delta( (fr.transform(Vector[2, 0, 0]) -
+                      (t + Vector[0, 0, -2])).norm(), 0, 1e-15)
+    assert_in_delta( (fr.transform(Vector[0, 0, 2]) -
+                      (t + Vector[2, 0, 0])).norm(), 0, 1e-15)
+
+    fr = HomTran.new(UnitQuaternion.fromAngleAxis(Math::PI/2,
+                                                  Vector[1, 0, 0]),
+                     t)
+    assert_in_delta( (fr.transform(Vector[2, 0, 0]) -
+                      (t + Vector[2, 0, 0])).norm(), 0, 1e-15)
+    assert_in_delta( (fr.transform(Vector[0, 2, 0]) -
+                      (t + Vector[0, 0, 2])).norm(), 0, 1e-15)
+    assert_in_delta( (fr.transform(Vector[0, 0, 2]) -
+                      (t + Vector[0, -2, 0])).norm(), 0, 1e-15)
   end
 end

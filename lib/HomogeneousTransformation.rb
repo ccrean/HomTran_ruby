@@ -1,5 +1,6 @@
 require_relative 'homogeneous_transformation/version'
 require 'unit_quaternion'
+require 'matrix'
 
 class HomogeneousTransformation
   def initialize(q = UnitQuaternion.new(1, 0, 0, 0),

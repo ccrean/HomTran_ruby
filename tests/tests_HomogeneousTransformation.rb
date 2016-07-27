@@ -3,6 +3,21 @@ require 'matrix'
 require 'unit_quaternion'
 require_relative '../lib/homogeneous_transformation'
 
+def isIdentityMatrix(m, tol)
+  for i, j in [0,1,2].product([0,1,2])
+    if i == j
+      if (m[i,j] - 1).abs > tol
+        return false
+      end
+    else
+      if m[i,j].abs > tol
+        return false
+      end
+    end
+  end
+  return true
+end
+
 class TestHomogeneousTransformation < Test::Unit::TestCase
 
   def setup
@@ -118,6 +133,14 @@ class TestHomogeneousTransformation < Test::Unit::TestCase
         transformed = fr.inverse().transform(fr.transform(v))
         assert_in_delta( (v - transformed).norm(), 0, 1e-14)
       end
+    end
+  end
+
+  def test_matrix
+    @quats.product(@translations).each() do |q, t|
+      fr = HomTran.new(q, t)
+      fr_inv = fr.inverse()
+      assert(isIdentityMatrix( fr.getMatrix() * fr_inv.getMatrix(), 1e-15))
     end
   end
 end

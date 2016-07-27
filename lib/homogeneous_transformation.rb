@@ -80,6 +80,14 @@ class HomogeneousTransformation
     t_inv = q_inv.transform(-1 * @t)
     return HomogeneousTransformation.new(q_inv, t_inv)
   end
+
+  # Returns the 4x4 matrix representation of the homogeneous transformation.
+  def getMatrix
+    rot_mat = @q.getRotationMatrix()
+    m = Matrix.columns([*rot_mat.transpose(), @t])
+    m = Matrix.rows([*m, [0, 0, 0, 1]])
+    return m
+  end
 end
 
 HomTran = HomogeneousTransformation

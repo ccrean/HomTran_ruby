@@ -90,6 +90,15 @@ class HomogeneousTransformation
     m = Matrix.rows([*m, [0, 0, 0, 1]])
     return m
   end
+
+  # Compose two homogeneous transformations.
+  def *(other)
+    q_result = self.getQuaternion() * other.getQuaternion()
+    t_result = self.getQuaternion().transform(other.getTranslation()) +
+      self.getTranslation()
+    result = HomogeneousTransformation.new(q_result, t_result)
+    return result
+  end
 end
 
 HomTran = HomogeneousTransformation

@@ -20,6 +20,16 @@ def isIdentityMatrix(m, tol)
   return true
 end
 
+def areEqualMatrices(m1, m2, tol)
+  m1.zip(m2).each() do |v1, v2|
+    if (v1 - v2).abs() > tol
+      puts("error = ", (v1 - v2).abs())
+      return false
+    end
+  end
+  return true
+end
+
 class TestHomogeneousTransformation < Test::Unit::TestCase
 
   def setup
@@ -27,16 +37,17 @@ class TestHomogeneousTransformation < Test::Unit::TestCase
                ::UnitQuaternion.new(0.1, 0.01, 2.3, 4),
                ::UnitQuaternion.new(1234.4134, 689.6124, 134.124, 0.5),
                ::UnitQuaternion.new(1,1,1,1),
+               UnitQuaternion.new(1, 0, 0, 0),
              ]
     @angles = [ 2*Math::PI, Math::PI, Math::PI/2, Math::PI/4,
-                0.5,  0.25, 0.1234, 0, ]
+                0.5,  0.25, 0.1234, ]
     @axes = [ Vector[ 1, 1, 1 ], Vector[ 1, 0, 0 ], Vector[ 0, 1, 0 ],
               Vector[ 0, 0, 1 ], Vector[ 1, 2, 3 ], ]
     for angle, axis in @angles.product(@axes)
       @quats << UnitQuaternion.fromAngleAxis(angle, axis)
     end
 
-    positions = (0..1).step(0.2).to_a
+    positions = (0..1).step(0.5).to_a
     @translations = []
     positions.product(positions, positions).each() do |a, b, c|
       @translations << Vector[a, b, c]
@@ -143,6 +154,17 @@ class TestHomogeneousTransformation < Test::Unit::TestCase
       fr = HomTran.new(q, t)
       fr_inv = fr.inverse()
       assert(isIdentityMatrix( fr.getMatrix() * fr_inv.getMatrix(), 1e-15))
+    end
+  end
+
+  def test_multiply
+    parts = @quats.product(@translations)
+    for i in 0...(parts.length() - 1)
+      fr1 = HomTran.new(*parts[i])
+      fr2 = HomTran.new(*parts[i+1])
+      result = fr1 * fr2
+      assert(areEqualMatrices(result.getMatrix(),
+                              fr1.getMatrix() * fr2.getMatrix(), 1e-15))
     end
   end
 end

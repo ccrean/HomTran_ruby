@@ -19,4 +19,5 @@ tmp
 log.org
 tester.rb
 *~
-coverage
+coverage/*
+doc/*

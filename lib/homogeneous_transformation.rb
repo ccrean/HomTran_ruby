@@ -17,10 +17,12 @@ class HomogeneousTransformation
     setTranslation(translation, rel_to, local)
   end
 
+  # Returns the quaternion that represents the orientation of the homogeneous transformation.
   def getQuaternion()
     return @q
   end
 
+  # Returns the 3-vector that specifies the translation of the homogeneous transformation.
   def getTranslation()
     return @t
   end

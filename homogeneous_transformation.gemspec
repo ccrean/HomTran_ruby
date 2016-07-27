@@ -8,9 +8,9 @@ Gem::Specification.new do |spec|
   spec.version       = HomogeneousTransformation::VERSION
   spec.authors       = ["Cory Crean"]
   spec.email         = ["cory.crean@gmail.com"]
-  spec.description   = %q{TODO: Write a gem description}
-  spec.summary       = %q{TODO: Write a gem summary}
-  spec.homepage      = ""
+  spec.description   = %q{Provides a HomogeneousTransformation class to convert back and forth between the representations of vectors in different reference frames}
+  spec.summary       = %q{Provides a HomogeneousTransformation class}
+  spec.homepage      = "https://github.com/ccrean/HomTran_ruby"
   spec.license       = "BSD"
 
   spec.files         = `git ls-files`.split($/)

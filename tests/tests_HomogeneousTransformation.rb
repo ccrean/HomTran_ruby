@@ -176,6 +176,35 @@ class TestHomogeneousTransformation < Test::Unit::TestCase
                               q.getRotationMatrix(), 1e-15))
       assert(areEqualMatrices(fr.getTranslation(), t, 1e-15))
     end
+
+    q = UnitQuaternion.new(1,2,3,4)
+    t = Vector[1,2,3]
+    m = buildMatrix(q, t)
+    m2 = Matrix[m.row(0), m.row(1), m.row(2), [0.01, 0, 0, 1]]
+    ht = HomTran.new()
+    assert_raise(ArgumentError) do
+      ht.setMatrix(m2)
+    end
+    assert_raise(ArgumentError) do
+      HomTran.fromMatrix(m2)
+    end
+
+    m2 = Matrix[m.row(0), m.row(1), m.row(2), [0, 0, 0, 1.0001]]
+    assert_raise(ArgumentError) do
+      ht.setMatrix(m2)
+    end
+    assert_raise(ArgumentError) do
+      HomTran.fromMatrix(m2)
+    end
+
+    m2 = Matrix[ [1, 0.001, 0, 1], [0, 1, 0, 2], [0, 0, 1, 3],
+                 [0, 0, 0, 1] ]
+    assert_raise(ArgumentError) do
+      ht.setMatrix(m2)
+    end
+    assert_raise(ArgumentError) do
+      HomTran.fromMatrix(m2)
+    end
   end
 
   def test_multiply

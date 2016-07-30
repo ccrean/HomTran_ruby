@@ -169,6 +169,13 @@ class TestHomogeneousTransformation < Test::Unit::TestCase
                               q.getRotationMatrix(), 1e-15))
       assert(areEqualMatrices(fr.getTranslation(), t, 1e-15))
     end
+
+    @quats.product(@translations).each() do |q, t|
+      fr = HomTran.fromMatrix(buildMatrix(q, t))
+      assert(areEqualMatrices(fr.getQuaternion().getRotationMatrix(),
+                              q.getRotationMatrix(), 1e-15))
+      assert(areEqualMatrices(fr.getTranslation(), t, 1e-15))
+    end
   end
 
   def test_multiply

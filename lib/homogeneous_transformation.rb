@@ -17,6 +17,16 @@ class HomogeneousTransformation
     setTranslation(translation, rel_to, local)
   end
 
+  # Creates a homogeneous transformation given a suitable 4x4 matrix.
+  #
+  # Params:
+  # +m+:: A 4x4 matrix.  The upper left 3x3 submatrix must be orthonormal, and the final row must be [0, 0, 0, 1].
+  def self.fromMatrix(m)
+    h = HomogeneousTransformation.new()
+    h.setMatrix(m)
+    return h
+  end
+
   # Returns the quaternion that represents the orientation of the homogeneous transformation.
   def getQuaternion()
     return @q

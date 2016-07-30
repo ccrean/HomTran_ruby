@@ -205,6 +205,14 @@ class TestHomogeneousTransformation < Test::Unit::TestCase
     assert_raise(ArgumentError) do
       HomTran.fromMatrix(m2)
     end
+
+    m2 = Matrix[ [1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0] ]
+    assert_raise(ArgumentError) do
+      ht.setMatrix(m2)
+    end
+    assert_raise(ArgumentError) do
+      HomTran.fromMatrix(m2)
+    end
   end
 
   def test_multiply

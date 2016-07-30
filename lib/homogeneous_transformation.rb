@@ -64,6 +64,21 @@ class HomogeneousTransformation
     end
   end
 
+  # Sets the value of the homogeneous transformation given a suitable 4x4 matrix.
+  #
+  # Params:
+  # +m+:: A 4x4 matrix.  The upper left 3x3 submatrix must be orthonormal, and the final row must be [0, 0, 0, 1].
+  def setMatrix(m)
+    if m.row_size() != 4 or m.column_size() != 4
+      raise(ArgumentError, "Matrix must be 4x4")
+    end
+    if (m.row(3) - Vector[0,0,0,1]).norm() > 1e-15
+      raise(ArgumentError, "Final row must be [0, 0, 0, 1]")
+    end
+    @q.setRotationMatrix(m.minor(0..2, 0..2))
+    @t = m.column(3)[0..2]
+  end
+
   # Takes a vector v representing a point in the local frame and returns the
   # vector to that same point relative to the global frame.
   #

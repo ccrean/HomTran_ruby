@@ -30,6 +30,12 @@ def areEqualMatrices(m1, m2, tol)
   return true
 end
 
+def buildMatrix(q, t)
+  m = q.getRotationMatrix()
+  m = Matrix[*m.transpose(), t].transpose()
+  m = Matrix[*m, [0, 0, 0, 1]]
+end
+
 class TestHomogeneousTransformation < Test::Unit::TestCase
 
   def setup
@@ -154,6 +160,14 @@ class TestHomogeneousTransformation < Test::Unit::TestCase
       fr = HomTran.new(q, t)
       fr_inv = fr.inverse()
       assert(isIdentityMatrix( fr.getMatrix() * fr_inv.getMatrix(), 1e-15))
+    end
+
+    @quats.product(@translations).each() do |q, t|
+      fr = HomTran.new()
+      fr.setMatrix(buildMatrix(q, t))
+      assert(areEqualMatrices(fr.getQuaternion().getRotationMatrix(),
+                              q.getRotationMatrix(), 1e-15))
+      assert(areEqualMatrices(fr.getTranslation(), t, 1e-15))
     end
   end
 

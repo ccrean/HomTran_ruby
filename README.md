@@ -31,7 +31,7 @@ To use the HomogeneousTransformation class in your program, include
 the following line:
 
 ```
-require 'homogeneous_transformation
+require 'homogeneous_transformation'
 ```
 
 The following typedef has bee provided for your convenience:
@@ -123,10 +123,10 @@ result.getMatrix()
 
 ## Advanced Features
 
-The initialize, setQuaternion, and setTranslation all accept two
-additional parameters: a HomTran object called rel_to, and a boolean
-value called local.  The value of local is only used if rel_to is not
-nil.
+The initialize, setQuaternion, and setTranslation methods all accept
+two additional parameters: a HomTran object called rel_to, and a
+boolean value called local.  The value of local is only used if rel_to
+is not nil.
 
 By default, when initializing a HomTran object, or setting its
 orientation or position, this class assumes that the transformation is
@@ -137,8 +137,8 @@ orientation and rotation are specified relative to the rel_to frame.
 
 If local is true (its default value), then the location and
 orientation should be specified in the rel_to frame.  If local is
-false, they should be specified in the "global" (or rel_to's parent)
-frame.
+false, they should be specified in the "global" frame (or rel_to's
+parent frame).
 
 Perhaps an example will clarify things.  Consider the following frame:
 
@@ -150,7 +150,7 @@ frame1 = HomTran.new(UnitQuaternion.fromAngleAxis(Math::PI/2, Vector[0, 0, 1]), 
 The frame is rotated by PI/2 radians about the global z-axis, and
 offset by 1 unit along the global x-axis.  Next, say we want to create
 a new frame with the same orientation, but offset by another 1 unit
-along the global z-axis.  We could create such a frame as follows:
+along the global x-axis.  We could create such a frame as follows:
 
 ```
 frame2 = HomTran.new(UnitQuaternion.new(), Vector[1, 0, 0], frame1, false)
@@ -164,6 +164,7 @@ Notice that we specified [1, 0, 0] for frame2's translation, but,
 since we passed in frame1 for the rel_to argument, the resulting
 translation is [1, 0, 0] plus frame1's translation.  Also, notice that
 local was false, so we translated frame2 along the global x-axis.
+
 Since frame1 is rotated by PI/2 about the global z-axis, frame2's
 x-axis is aligned with the global y-axis.  So, if we create a new
 frame similar to frame2, but with local = true, we will translate it
@@ -181,10 +182,10 @@ frame3.getTranslation()
 Exactly what we expected!
 
 A note of caution: when you create a HomTran using the rel_to
-parameter, this class calculates the resulting offset relative to the
-"global" frame and returns the corresponding HomTran.  So, any
-subsequent changes to the rel_to frame will not affect the child
-frame, unless you update it manually using the setQuaternion or
+parameter, this class calculates the resulting offset and orientation
+relative to the "global" frame and returns the corresponding HomTran.
+So, any subsequent changes to the rel_to frame will not affect the
+child frame, unless you update it manually using the setQuaternion or
 setTranslation methods with the rel_to parameter.
 
 ## Contributing

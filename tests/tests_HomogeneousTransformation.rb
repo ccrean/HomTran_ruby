@@ -1,3 +1,9 @@
+# Name: tests_HomogeneousTransformation.rb
+# Description: Test cases for the HomogeneousTransformation class
+# Author: Cory Crean
+# E-mail: cory.crean@gmail.com
+# Copyright (c) 2016, Cory Crean
+
 require 'simplecov'
 SimpleCov.start
 require 'test/unit'

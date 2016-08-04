@@ -1,3 +1,10 @@
+# Author:: Cory Crean (mailto:cory.crean@gmail.com)
+# Copyright:: Copyright (c) 2016 Cory Crean
+# License:: BSD
+#
+# A homogeneous transformation class, for converting between the
+# representations of vectors in different reference frames.
+
 require_relative 'homogeneous_transformation/version'
 require 'unit_quaternion'
 require 'matrix'
